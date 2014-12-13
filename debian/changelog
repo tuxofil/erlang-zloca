@@ -1,3 +1,9 @@
+erlang-zloca (0.2.0) unstable; urgency=low
+
+  * add get_only_if_cached/2 fun.
+
+ -- Aleksey Morarash <aleksey.morarash@gmail.com>  Sat, 13 Dec 2014 23:14:00 +0200
+
 erlang-zloca (0.1.0) unstable; urgency=low
 
   * Initial release.
