@@ -12,7 +12,8 @@
 %% API exports
 -export(
    [start_link/2,
-    get/2
+    get/2,
+    get_only_if_cached/2
    ]).
 
 %% gen_server callback exports
@@ -80,6 +81,20 @@ get(ServerName, Key) ->
                     ok
             end,
             Item#item.value
+    end.
+
+%% @doc Query the cache for a keyed value. Do not real query if
+%% the value does not cached yet but immediately return 'undefined'.
+-spec get_only_if_cached(ServerName :: zloca:server_name(),
+                         Key :: zloca:key()) ->
+                                {ok, Value :: zloca:value()} |
+                                undefined.
+get_only_if_cached(ServerName, Key) ->
+    case ets:lookup(ServerName, Key) of
+        [R] ->
+            {ok, R#item.value};
+        [] ->
+            undefined
     end.
 
 %% --------------------------------------------------------------------

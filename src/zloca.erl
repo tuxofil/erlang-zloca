@@ -10,7 +10,8 @@
 %% API exports
 -export(
    [start_link/2,
-    get/2
+    get/2,
+    get_only_if_cached/2
    ]).
 
 -include("zloca.hrl").
@@ -57,6 +58,15 @@ start_link(ServerName, BackendFun)
                  Value :: value().
 get(ServerName, Key) ->
     zloca_srv:get(ServerName, Key).
+
+%% @doc Query the cache for a keyed value. Do not real query if
+%% the value does not cached yet but immediately return 'undefined'.
+-spec get_only_if_cached(ServerName :: server_name(),
+                         Key :: key()) ->
+                                {ok, Value :: value()} |
+                                undefined.
+get_only_if_cached(ServerName, Key) ->
+    zloca_srv:get_only_if_cached(ServerName, Key).
 
 %% ----------------------------------------------------------------------
 %% Internal functions
@@ -126,8 +136,10 @@ main_test_() ->
      {inorder,
       [
        ?_feedBackend(s, {k1, v1}),
+       ?_assertMatch(undefined, get_only_if_cached(z, k1)),
        ?_assertLong(z, k1, v1),
        ?_assertFast(z, k1, v1),
+       ?_assertMatch({ok, v1}, get_only_if_cached(z, k1)),
        ?_assertLong(z, k2, undefined),
        ?_assertFast(z, k2, undefined),
        ?_feedBackend(s, [{k1, v2}, {k2, v3}]),
