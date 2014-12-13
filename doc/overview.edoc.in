@@ -1,0 +1,13 @@
+@author Aleksey Morarash <aleksey.morarash@gmail.com>
+@copyright 2014 Aleksey Morarash <aleksey.morarash@gmail.com>
+@version {{VERSION}}
+@title Welcome to Zero Latency On Update Cache Library for Erlang.
+@doc == Contents ==
+
+<ol>
+ <li>{@section Summary}</li>
+</ol>
+
+== Summary ==
+
+Zero Latency On Update Cache Library for Erlang.

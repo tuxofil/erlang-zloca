@@ -1,0 +1,15 @@
+%%% @author Aleksey Morarash <aleksey.morarash@gmail.com>
+%%% @since 13 Dec 2014
+%%% @copyright 2014, Aleksey Morarash <aleksey.morarash@gmail.com>
+%%% @doc zloca application resource file
+
+{application, zloca,
+ [
+  {description,  "Zero Latency On Update Cache"},
+  {vsn,          "{{VERSION}}"},
+  {modules,      [zloca,
+                  zloca_srv,
+                  zloca_updator,
+                  zloca_lib
+                 ]}
+ ]}.

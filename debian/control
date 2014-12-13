@@ -1,0 +1,21 @@
+Source: erlang-zloca
+Section: devel
+Priority: extra
+Maintainer: Aleksey Morarash <aleksey.morarash@gmail.com>
+Build-Depends: debhelper (>= 8.0.0), erlang-base, erlang-tools,
+ erlang-edoc
+Standards-Version: 3.9.3
+Homepage: https://github.com/tuxofil/erlang-zloca
+Vcs-Browser: https://github.com/tuxofil/erlang-zloca
+Vcs-Git: https://github.com/tuxofil/erlang-zloca.git
+
+Package: erlang-zloca
+Architecture: all
+Depends: erlang-base
+Description: Zero Latency On Update Cache Library for Erlang
+ Zero Latency On Update Cache Library for Erlang.
+
+Package: erlang-zloca-doc
+Architecture: all
+Description: Developer documentation for the zloca library.
+ Contains generated HTML documentation for the zloca library source code.
