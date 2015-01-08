@@ -1,3 +1,9 @@
+erlang-zloca (0.3.0) unstable; urgency=low
+
+  * add get_only_if_cached_with_ttl/2 API fun.
+
+ -- Aleksey Morarash <aleksey.morarash@gmail.com>  Thu, 08 Jan 2015 23:27:00 +0200
+
 erlang-zloca (0.2.0) unstable; urgency=low
 
   * add get_only_if_cached/2 fun.
