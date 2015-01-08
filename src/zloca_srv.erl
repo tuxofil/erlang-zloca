@@ -87,12 +87,13 @@ get(ServerName, Key) ->
 %% the value does not cached yet but immediately return 'undefined'.
 -spec get_only_if_cached(ServerName :: zloca:server_name(),
                          Key :: zloca:key()) ->
-                                {ok, Value :: zloca:value()} |
+                                {ok, Value :: zloca:value(),
+                                 TTL :: zloca:ttl()} |
                                 undefined.
 get_only_if_cached(ServerName, Key) ->
     case ets:lookup(ServerName, Key) of
         [R] ->
-            {ok, R#item.value};
+            {ok, R#item.value, R#item.ttl};
         [] ->
             undefined
     end.

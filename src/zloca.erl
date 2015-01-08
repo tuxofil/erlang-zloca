@@ -11,7 +11,8 @@
 -export(
    [start_link/2,
     get/2,
-    get_only_if_cached/2
+    get_only_if_cached/2,
+    get_only_if_cached_with_ttl/2
    ]).
 
 -include("zloca.hrl").
@@ -66,6 +67,22 @@ get(ServerName, Key) ->
                                 {ok, Value :: value()} |
                                 undefined.
 get_only_if_cached(ServerName, Key) ->
+    case get_only_if_cached_with_ttl(ServerName, Key) of
+        {ok, Value, _TTL} ->
+            {ok, Value};
+        undefined ->
+            undefined
+    end.
+
+%% @doc Query the cache for a keyed value. Do not real query if
+%% the value does not cached yet but immediately return 'undefined'.
+-spec get_only_if_cached_with_ttl(ServerName :: server_name(),
+                                  Key :: key()) ->
+                                         {ok,
+                                          Value :: value(),
+                                          TTL :: ttl()} |
+                                         undefined.
+get_only_if_cached_with_ttl(ServerName, Key) ->
     zloca_srv:get_only_if_cached(ServerName, Key).
 
 %% ----------------------------------------------------------------------
