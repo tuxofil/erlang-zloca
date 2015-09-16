@@ -1,6 +1,6 @@
 APP = zloca
 
-VERSION = $(shell cat version)
+VERSION = $(shell dpkg-parsechangelog -Sversion -ldebian/changelog)
 
 .PHONY: all compile html clean eunit dialyze all-tests
 
