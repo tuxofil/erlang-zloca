@@ -11,8 +11,7 @@
 -record(
    item,
    {key :: zloca:key(),
-    value :: {ok, zloca:value()} |
-             undefined,
+    value :: any(),
     ttl :: zloca:ttl(),
     updated = zloca_lib:micros() :: zloca_lib:micros()
    }).
