@@ -13,7 +13,8 @@
 -export(
    [start_link/2,
     get/2,
-    get_only_if_cached/2
+    get_only_if_cached/2,
+    inject/4
    ]).
 
 %% gen_server callback exports
@@ -96,6 +97,24 @@ get_only_if_cached(ServerName, Key) ->
             {ok, R#item.value, R#item.ttl};
         [] ->
             undefined
+    end.
+
+%% @doc Explicitly populate zloca cache with new item (or replace
+%% existing one).
+-spec inject(ServerName :: zloca:server_name(),
+             Key :: zloca:key(),
+             Value :: zloca:value(),
+             TTL :: zloca:ttl()) -> ok.
+inject(ServerName, Key, Value, TTL) ->
+    Item = #item{key = Key, value = Value, ttl = TTL},
+    true = ets:insert(ServerName, Item),
+    if Item#item.ttl /= infinity ->
+            ok = gen_server:cast(
+                   ServerName,
+                   ?CAST_SCHEDULE_UPDATE(
+                      Key, Item#item.updated, Item#item.ttl));
+       true ->
+            ok
     end.
 
 %% --------------------------------------------------------------------

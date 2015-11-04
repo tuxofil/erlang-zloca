@@ -12,7 +12,8 @@
    [start_link/2,
     get/2,
     get_only_if_cached/2,
-    get_only_if_cached_with_ttl/2
+    get_only_if_cached_with_ttl/2,
+    inject/4
    ]).
 
 -include("zloca.hrl").
@@ -85,6 +86,13 @@ get_only_if_cached(ServerName, Key) ->
 get_only_if_cached_with_ttl(ServerName, Key) ->
     zloca_srv:get_only_if_cached(ServerName, Key).
 
+%% @doc Explicitly populate zloca cache with new item (or replace
+%% existing one).
+-spec inject(ServerName :: server_name(),
+             Key :: key(), Value :: value(), TTL :: ttl()) -> ok.
+inject(ServerName, Key, Value, TTL) ->
+    zloca_srv:inject(ServerName, Key, Value, TTL).
+
 %% ----------------------------------------------------------------------
 %% Internal functions
 %% ----------------------------------------------------------------------
@@ -135,7 +143,9 @@ main_test_() ->
          fun() ->
                  s = ets:new(s, [named_table, public]),
                  BackendFun =
-                     fun(Key) ->
+                     fun(k3) ->
+                             {ok, v4, 1};
+                        (Key) ->
                              ok = timer:sleep(100),
                              case ets:lookup(s, Key) of
                                  [{_, V}] ->
@@ -164,7 +174,13 @@ main_test_() ->
        ?_assertFast(z, k2, undefined),
        ?_sleep(1.2),
        ?_assertFast(z, k1, v2),
-       ?_assertFast(z, k2, v3)
+       ?_assertFast(z, k2, v3),
+       %% injection test
+       ?_assertMatch(undefined, get_only_if_cached(z, k3)),
+       ?_assertMatch(ok, inject(z, k3, v3, 1)),
+       ?_assertFast(z, k3, v3),
+       ?_sleep(1.2),
+       ?_assertFast(z, k3, v4)
       ]}}.
 
 -endif.
