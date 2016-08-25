@@ -10,7 +10,8 @@
 %% API exports
 -export(
    [start_link/2,
-    add/4
+    add/4,
+    awake/1
    ]).
 
 -include("zloca.hrl").
@@ -65,6 +66,12 @@ start_link(ServerName, BackendFun) ->
                  ok.
 add(UpdatorPid, Key, LastUpdated, TTL) ->
     _Sent = UpdatorPid ! ?ADD(Key, LastUpdated, TTL),
+    ok.
+
+%% @doc Immediately start values update procedure.
+-spec awake(UpdatorPid :: pid()) -> ok.
+awake(UpdatorPid) ->
+    _Sent = UpdatorPid ! ?AWAKE,
     ok.
 
 %% ----------------------------------------------------------------------

@@ -13,7 +13,8 @@
     get/2,
     get_only_if_cached/2,
     get_only_if_cached_with_ttl/2,
-    inject/4
+    inject/4,
+    update/1
    ]).
 
 -include("zloca.hrl").
@@ -92,6 +93,13 @@ get_only_if_cached_with_ttl(ServerName, Key) ->
              Key :: key(), Value :: value(), TTL :: ttl()) -> ok.
 inject(ServerName, Key, Value, TTL) ->
     zloca_srv:inject(ServerName, Key, Value, TTL).
+
+%% @doc Update all accumulated values immediately disregard their TTL.
+%% Note this will only start update process and function will return
+%% earlier than all values will be updated.
+-spec update(ServerName :: server_name()) -> ok.
+update(ServerName) ->
+    zloca_srv:update(ServerName).
 
 %% ----------------------------------------------------------------------
 %% Internal functions

@@ -14,7 +14,8 @@
    [start_link/2,
     get/2,
     get_only_if_cached/2,
-    inject/4
+    inject/4,
+    update/1
    ]).
 
 %% gen_server callback exports
@@ -45,6 +46,7 @@
 -define(
    CAST_SCHEDULE_UPDATE(Key, LastUpdated, TTL),
    {schedule_update, Key, LastUpdated, TTL}).
+-define(CAST_UPDATE, update).
 
 %% --------------------------------------------------------------------
 %% API functions
@@ -117,6 +119,13 @@ inject(ServerName, Key, Value, TTL) ->
             ok
     end.
 
+%% @doc Update all accumulated values immediately disregard their TTL.
+%% Note this will only start update process and function will return
+%% earlier than all values will be updated.
+-spec update(ServerName :: zloca:server_name()) -> ok.
+update(ServerName) ->
+    gen_server:cast(ServerName, ?CAST_UPDATE).
+
 %% --------------------------------------------------------------------
 %% gen_server callback functions
 %% --------------------------------------------------------------------
@@ -149,6 +158,9 @@ handle_info(_Request, State) ->
                          {noreply, NewState :: #state{}}.
 handle_cast(?CAST_SCHEDULE_UPDATE(Key, LastUpdated, TTL), State) ->
     ok = zloca_updator:add(State#state.updator, Key, LastUpdated, TTL),
+    {noreply, State};
+handle_cast(?CAST_UPDATE, State) ->
+    ok = zloca_updator:awake(State#state.updator),
     {noreply, State};
 handle_cast(_Request, State) ->
     {noreply, State}.
