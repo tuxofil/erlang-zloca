@@ -1,3 +1,9 @@
+erlang-zloca (0.5.0) unstable; urgency=low
+
+  * add update/1 API call
+
+ -- Aleksey Morarash <aleksey.morarash@gmail.com>  Wed, 16 Nov 2016 12:22:10 +0200
+
 erlang-zloca (0.4.0) unstable; urgency=low
 
   * add new API call: inject/4
